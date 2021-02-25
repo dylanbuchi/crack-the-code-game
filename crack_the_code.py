@@ -126,12 +126,12 @@ class CrackTheCodeGame:
 
             self.print_player_count_try_message()
 
-    def reset(self):
-        self.easy_mode = False
-        self.hard_mode = False
-        self.secret_code = None
-        self.player = None
-        self.secret_code_to_crack_map = None
+    # def reset(self):
+    #     self.easy_mode = False
+    #     self.hard_mode = False
+    #     self.secret_code = None
+    #     self.player = None
+    #     self.secret_code_to_crack_map = None
 
     def check_player_cracked_the_code(self):
         if self.get_player_code():
