@@ -5,10 +5,14 @@ from code_generator import CodeGenerator
 class CrackTheCodeGame:
     """4 digits guessing game || hard mode: 5 digits || easy mode: shows the user which position they guessed correctly"""
     def __init__(self):
-        # self.secret_code_to_crack_map = None
 
         self.hard_mode = False
         self.easy_mode = False
+
+        self.easy_mode_correct_nums = ["*", "*", "*", "*"]
+
+        self.hard_mode_correct_nums = []
+        self.hard_mode_seen_secret_digits = ['', '', '', '', '']
 
         self.hard_mode_digits = 5
         self.default_mode_digits = 4
@@ -21,13 +25,6 @@ class CrackTheCodeGame:
         self.player_score = 0
         self.player_try_count = 0
         self.player_correct_digits = 0
-
-    def set_secret_secret_code_map_to_crack(self):
-        if self.get_secret_code():
-            self.secret_code_to_crack_map = {
-                digit: False
-                for digit in self.get_secret_code()
-            }
 
     def ask_player_to_which_mode_to_play(self):
         response = input(
@@ -44,7 +41,7 @@ class CrackTheCodeGame:
     def is_easy_mode_on(self):
         return self.easy_mode
 
-    def easy_mode_game(self):
+    def easy_mode_part(self):
         ...
 
     def set_secret_code_based_on_mode(self):
@@ -111,11 +108,7 @@ class CrackTheCodeGame:
         self.set_secret_code_based_on_mode()
 
         while True:
-
             self.set_player_code(self.ask_player_to_guess_the_code())
-            print(self.get_player_code())
-            print(self.get_secret_code())
-
             self.player_try_count += 1
 
             if self.check_player_cracked_the_code():
@@ -124,6 +117,12 @@ class CrackTheCodeGame:
                     f"It took you {self.get_player_try_count()} {('tries') if self.get_player_try_count() > 1 else ('try') } to crack the code"
                 )
                 break
+
+            if self.is_easy_mode_on():
+                self.print_correct_index()
+
+            elif self.is_hard_mode_on():
+                self.print_guessed_number()
 
             self.print_player_count_try_message()
 
@@ -135,8 +134,6 @@ class CrackTheCodeGame:
         self.secret_code_to_crack_map = None
 
     def check_player_cracked_the_code(self):
-        self.set_secret_secret_code_map_to_crack()
-
         if self.get_player_code():
             secret_code = self.get_secret_code()
             for i, player_digit in enumerate(self.get_player_code()):
@@ -144,10 +141,37 @@ class CrackTheCodeGame:
                     return False
         return True
 
-    def get_player_correct_digits_count(self):
+    def print_guessed_number(self):
         secret_code = self.get_secret_code()
-        count = 0
+        seen = self.hard_mode_seen_secret_digits
+
         for i, player_digit in enumerate(self.get_player_code()):
             if secret_code[i] == player_digit:
+                if secret_code[i] != seen[i]:
+                    self.hard_mode_correct_nums.append(str(secret_code[i]))
+                seen[i] = secret_code[i]
+        print(f"Correct numbers: {', '.join(self.hard_mode_correct_nums)}")
+
+    def get_player_correct_digits_count(self):
+        if self.is_easy_mode_on():
+            return self.count_digits_inside_a_list(self.easy_mode_correct_nums)
+        else:
+            return self.count_digits_inside_a_list(self.hard_mode_correct_nums)
+
+    def count_digits_inside_a_list(self, a_list):
+        string_list = list(map(str, a_list))
+        count = 0
+
+        for digit in string_list:
+            if digit.isdigit():
                 count += 1
         return count
+
+    def print_correct_index(self):
+        secret_code = self.get_secret_code()
+
+        for i, player_digit in enumerate(self.get_player_code()):
+            if secret_code[i] == player_digit:
+                self.easy_mode_correct_nums[i] = str(secret_code[i])
+
+        print(f"Secret code: {''.join(self.easy_mode_correct_nums)}")
