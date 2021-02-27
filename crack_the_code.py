@@ -26,7 +26,7 @@ class CrackTheCodeGame:
         self.player_try_count = 0
         self.player_correct_digits = 0
 
-    def ask_player_to_which_mode_to_play(self):
+    def ask_player_which_mode_to_play(self):
         response = input(
             "Do you want to play in easy mode (1) or in hard mode (2) ?"
         ).lower().strip()[0:1]
@@ -103,7 +103,7 @@ class CrackTheCodeGame:
 
     def play(self):
         self.set_current_player()
-        self.ask_player_to_which_mode_to_play()
+        self.ask_player_which_mode_to_play()
         self.print_mode_message()
         self.set_secret_code_based_on_mode()
 
